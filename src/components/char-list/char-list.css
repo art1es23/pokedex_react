@@ -1,0 +1,10 @@
+.char-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    grid-gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    
+    border: 1px solid black;
+}
