@@ -1,17 +1,44 @@
 import React, { Component } from 'react';
 import CharTypes from '../char-types';
-import ServicePokedex from '../../services';
+// import ServicePokedex from '../../services';
 
 import './char-list-item.css';
 
-class CharListItem extends Component{
+export default class CharListItem extends Component{
 
-    ServicePokedex = new ServicePokedex();
+    // ServicePokedex = new ServicePokedex();
+
+    state = {
+        nameNew: '',
+        imgURL: '',
+        charID: '',
+        types: {}
+    }
+
+    componentDidMount () {
+        const {name, url} = this.props;
+
+        const charID = url.split('/')[url.split('/').length - 2];
+        const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charID}.png`;
+
+        const nameNew = name[0].toUpperCase() + name.slice(1)
+
+        const types = {
+
+        }
+
+        this.setState({
+            nameNew,
+            charID,
+            imgURL
+        })
+
+    }
+
 
     render () {
 
-        const {label} = this.props;
-
+        
         // const charTypes = (
         //     <CharTypes
         //         getData={this.SerrvicePokedex.getResources}/>
@@ -20,9 +47,9 @@ class CharListItem extends Component{
         return (
             <div className="char-list__item">
                 <div className='img--wrapper char__img'>
-                    <img src="https://pokeres.bastionbot.org/images/pokemon/1.png" alt=""/>
+                    <img src={this.state.imgURL} alt=""/>
                 </div>
-                <h3 className='char__title'>{label}</h3>
+                <h3 className='char__title'>{this.state.nameNew}</h3>
                 <CharTypes/>
 
             </div>            
@@ -30,5 +57,3 @@ class CharListItem extends Component{
     
     }
 }
-
-export default CharListItem

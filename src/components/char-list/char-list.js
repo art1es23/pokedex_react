@@ -1,98 +1,157 @@
 import React, { Component } from 'react';
-// import CharListItem from '../char-list-item';
+import CharListItem from '../char-list-item';
 // import PropTypes from 'prop-types';
 
-import ErrorMessage from '../error-message';
+// import ErrorMessage from '../error-message';
 
 // import ServicePokedex from '../../services';
 
+import axios from 'axios';
+
 import './char-list.css';
 
-class CharList extends Component {
+export default class CharList extends Component {
+
+    // ServicePokedex = new ServicePokedex();
     
-    renderItems (arr) {
-        return arr.map(item => {
-            const {id} = item;
-            const label = this.props.renderItem(item);
-            // console.log(label);
-            return (
-                <li
-                    key={id}
-                    className='char-list__item'
-                    // onClick={() => this.props.onItemSelected(id)}
-                    label={label}></li>
-            )
-        });
+    state = {
+        url: 'https://pokeapi.co/api/v2/pokemon/',
+        char: null
     }
-    
+
+    async componentDidMount () {
+        // this.ServicePokedex.getResources()
+        // .then( (itemList) => {
+        //     this.setState({
+        //         itemList
+        //     })
+        // })
+
+        const res = await axios.get(this.state.url);
+        this.setState({char: res.data['results']});
+    }
+
+    // renderItems (arr) {
+    //     return arr.map((item, i) => {
+    //         return (
+    //             <div
+    //                 key={i}
+    //                 className='char-list__item'
+    //                 // onClick={() => this.props.onItemSelected(id)}
+    //                 >{item.name}</div>
+    //         )
+    //     })
+    // }
+
+
     render () {
 
-        console.log(this.props);
-        const {data: {results}} = this.props;
-        // console.log('some: ', results);
-        const items = this.renderItems(results);
-        // console.log(items);
+        // const {itemList} = this.state;
+        // const items = this.renderItems(itemList);
 
         return (
             <div className="char-list">
-                {items}
+                {
+                    this.state.char ? (
+                        this.state.char.map(item => 
+                        (
+                            <CharListItem
+                                key={item.name}
+                                name={item.name}
+                                url={item.url}/>
+                        ))
+                ) : (
+                    <h1>LOADING...</h1>
+                )}
             </div>
         )
     }
+
 }
+    
+//     renderItems (arr) {
+//         console.log(arr);
+//         return arr.map(item => {
+//             const {id} = item;
+//             console.log('id: ',id);
+//             // const label = this.props.renderItem(item);
+//             // console.log(label);
+//             return (
+//                 <div
+//                     key={id}
+//                     className='char-list__item'
+//                     // onClick={() => this.props.onItemSelected(id)}
+//                     // label={label}
+//                     ></div>
+//             )
+//         });
+//     }
+    
+//     render () {
 
-const WithData = (View) => {
-    return class extends Component {
+//         const {data: {results}} = this.props;
+//         const items = this.renderItems(results);
 
-        state = {
-            data: null,
-            error: false
-        }
+//         return (
+//             <div className="char-list">
+//                 {items}
+//             </div>
+//         )
+//     }
+// }
 
-        // static defaultProps = {
-        //     onItemSelected: () => {}
-        // }
+// const WithData = (View) => {
+//     return class extends Component {
 
-        // static propTypes = {
-        //     onItemSelected: PropTypes.func
-        // }
+//         state = {
+//             data: null
+//         }
 
-        componentDidMount () {
-            const {getData} = this.props;
-            // console.log(getData);
+//         // static defaultProps = {
+//         //     onItemSelected: () => {}
+//         // }
 
-            getData()
-                .then((data) => {
-                    this.setState({
-                        data,
-                        error: false
-                    })
-                })
-                .catch()
-        }
+//         // static propTypes = {
+//         //     onItemSelected: PropTypes.func
+//         // }
 
-        componentDidCatch () {
-            this.setState({
-                data: null,
-                error: true
-            })
-        }
+//         componentDidMount () {
+//             const {getData} = this.props;
 
-        render () {
-            const {data, error} = this.state;
+//             getData()
+//                 .then((data) => {
+//                     // console.log(data);
+//                     this.setState({
+//                         data,
+//                         error: false
+//                     })
+//                 })
+//                 .catch()
+//         }
 
-            if (error) {
-                return <ErrorMessage/>
-            }
+//         componentDidCatch () {
+//             this.setState({
+//                 data: null,
+//                 error: true
+//             })
+//         }
 
-            // if (!data) {
-            //     return <Spinner/>
-            // }
+//         render () {
+//             const {data, error} = this.state;
+//             console.log('view: ', data);
 
-            return <View {...this.props} data={data}/>
-        }
+//             if (error) {
+//                 return <ErrorMessage/>
+//             }
 
-    }
-}
+//             // if (!data) {
+//             //     return <Spinner/>
+//             // }
 
-export default WithData(CharList);
+//             return <View {...this.props} data={data}/>
+//         }
+
+//     }
+// }
+
+// export default WithData(CharList);

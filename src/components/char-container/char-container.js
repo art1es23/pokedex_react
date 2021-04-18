@@ -1,45 +1,46 @@
 import React, { Component } from 'react';
 import CharList from '../char-list';
 
-import ServicePokedex from '../../services';
-import ErrorMessage from '../error-message';
+// import ServicePokedex from '../../services';
+// import ErrorMessage from '../error-message';
 
 import './char-container.css';
 
 export default class CharContainer extends Component {
     
-    ServicePokedex = new ServicePokedex();
+    // ServicePokedex = new ServicePokedex();
 
-    state = {
-        selectedChars: 30,
-        error: false
-    }
+    // state = {
+    //     selectedChars: 30,
+    //     error: false
+    // }
 
-    onItemSelected = (id) => {
-        this.setState({
-            selectedChars: id
-        })
-    }
+    // onItemSelected = (id) => {
+    //     this.setState({
+    //         selectedChars: id
+    //     })
+    // }
 
-    componentDidCatch () {
-        this.setState({
-            error: true
-        });
-    }
+    // componentDidCatch () {
+    //     this.setState({
+    //         error: true
+    //     });
+    // }
 
     render () {
 
-        if (this.state.error) {
-            return <ErrorMessage/>
-        }
+        // if (this.state.error) {
+        //     return <ErrorMessage/>
+        // }
 
         // console.log(this.ServicePokedex.getAllChars);
 
         const charList = (
             <CharList
-                onItemSelected={this.onItemSelected}
-                getData={this.ServicePokedex.getResources}
-                renderItem={({name}) => `${name}`}/>
+                // onItemSelected={this.onItemSelected}
+                // getData={this.ServicePokedex.getResources}
+                // renderItem={({name}) => `${name}`}
+                />
         )
 
         return (

@@ -12,6 +12,10 @@ export default class ServicePokedex {
 
         // const char = await res.json();
 
+        // const list = char.results;
+
+        // console.log('list: ', list);
+        // return list;
         return await res.json();
     }
 
