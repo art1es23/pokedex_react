@@ -1,3 +1,3 @@
-import CharDescription from './char-description';
+import CharCardDescription from './char-description';
 
-export default CharDescription;
+export default CharCardDescription;

@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import CharListItem from '../char-list-item';
+import CharCardDescription from '../char-description';
 import styled from 'styled-components';
+
+import ServicePokedex from '../../services';
 
 const CardContainer = styled.section`
     display: grid;
     width: 100%;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2.5rem
-
+    grid-gap: 2.5rem;
+    position: relative;
 `;
 
 const CardBox = styled.div`
@@ -21,22 +24,27 @@ const CardBox = styled.div`
 
 const LoadMoreBtn = styled.button`
     grid-column: 1/2;
-
 `;
 
 export default class CharContainer extends Component {
 
-    state = {
-        url: 'https://pokeapi.co/api/v2/pokemon/',
-        chars: null,
-        error: null,
-        isLoaded: false,
-        selectedChar: 1
+    ServicePokedex = new ServicePokedex();
+
+    constructor (props) {
+        super(props);
+
+        this.state = {
+            // url: 'https://pokeapi.co/api/v2/pokemon/',
+            chars: null,
+            error: null,
+            isLoaded: false,
+            selectedChar: 1
+        }
     }
 
     componentDidMount () {
-        fetch(this.state.url)
-        .then(res => res.json())
+
+        this.ServicePokedex.getResources()
         .then(
             (item) => {
                 this.setState({
@@ -53,15 +61,10 @@ export default class CharContainer extends Component {
         )
     }
     
-    onCharSelected = (id) => {
-        console.log('sadas');
-        this.setState({
-            selectedChar: id
-        })
-    }
-
     render () {
-        const {error, isLoaded, chars} = this.state;
+        const {error, isLoaded, chars, selectedChar} = this.state;
+
+        console.log(selectedChar);
 
         const charList = () => {
             if (error) {
@@ -69,27 +72,40 @@ export default class CharContainer extends Component {
             } else if (!isLoaded) {
                 return <h1>Loading...</h1>
             } else {
-                const cardItems = chars.map(item => 
+                const cardItems = chars.map((item, index) => 
                 (
                     <CharListItem
-                        key={item.name}
+                        key={index}
                         name={item.name}
                         url={item.url}
-                        onCharSelected={this.onCharSelected}/>
+                        // selectedChar={selectedChar}
+                        onCharSelected={this.onCharSelected}
+                        />
                 ));
     
                 return (
-                    <CardBox className="char-list">
+                    <CardBox 
+                        charId={this.onCharSelected}
+                        getData={this.ServicePokedex.getResources}
+                        >
                         {cardItems}
                     </CardBox>
                 )
             }
         }
+        // console.log('s', this.state.selectedChar);
+
+        const charDescription = (
+            <CharCardDescription
+                charId={this.state.selectedChar}
+                getData={this.ServicePokedex.getChar}
+            />
+        )
         
         return (
             <CardContainer className='char-container'>
                 {charList()}
-                <section></section>
+                {charDescription}
                 <LoadMoreBtn>Load more</LoadMoreBtn>
             </CardContainer>
         )        

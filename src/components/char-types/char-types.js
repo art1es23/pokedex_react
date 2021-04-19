@@ -52,8 +52,7 @@ class CharTypes extends Component {
             const {name} = item.type;            
 
             if (!Object.keys(COLORS).includes(name)) return false;
-            let bgColor = COLORS[name]
-            console.log(bgColor);
+            let bgColor = COLORS[name];
 
             return (
                 <TypeListItem

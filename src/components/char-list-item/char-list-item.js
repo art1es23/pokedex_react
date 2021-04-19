@@ -19,6 +19,7 @@ const Card = styled.div`
 
     &:hover {
         background-color: rgba(100, 0, 0, 0.2);
+        cursor: pointer;
     }
 `;
 
@@ -48,13 +49,19 @@ const CardTitle = styled.h3`
 `;
 
 export default class CharListItem extends Component{
-    state = {
-        nameNew: '',
-        imgURL: '',
-        charID: '',
-        imgLoading: true,
-        manyRequests: false,
-        charTypes: []
+
+    constructor (props) {
+        super(props);
+
+        this.state = {
+            nameNew: '',
+            imgURL: '',
+            charID: '',
+            imgLoading: true,
+            manyRequests: false,
+            charTypes: []
+        }
+    
     }
 
     componentDidMount () {
@@ -80,12 +87,20 @@ export default class CharListItem extends Component{
         )
     }
 
+    onCharSelected = (id) => {
+        this.setState({
+            charID: id
+        })
+    }
+
     render () {
 
-        const {nameNew, imgURL, imgLoading, manyRequests, charTypes} = this.state;
-        
+        const {nameNew, imgURL, imgLoading, manyRequests, charTypes, charID} = this.state;
+
         return (
-            <Card className="char-list__item">
+            <Card 
+                onClick={() => this.onCharSelected(charID)}
+                >
                 <ImgWrapper>
                     {
                         imgLoading ? (
