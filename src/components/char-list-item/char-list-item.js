@@ -1,18 +1,60 @@
 import React, { Component } from 'react';
 import CharTypes from '../char-types';
-// import ServicePokedex from '../../services';
+import styled from 'styled-components';
 
-import './char-list-item.css';
+import spinner from '../spinner/Spinner-5.gif';
+
+
+const Card = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+
+    border-radius: 4px;
+    box-shadow: 10px 10px 15px 2.5px rgba(0,0,0,0.25);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: rgba(100, 0, 0, 0.2);
+    }
+`;
+
+const ImgWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+`;
+
+const Sprite = styled.img`
+    width: 60%;
+    object-fit: cover;
+`;
+
+const CardTitle = styled.h3`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 400;
+`;
 
 export default class CharListItem extends Component{
-
-    // ServicePokedex = new ServicePokedex();
-
     state = {
         nameNew: '',
         imgURL: '',
         charID: '',
-        types: {}
+        imgLoading: true,
+        manyRequests: false,
+        charTypes: []
     }
 
     componentDidMount () {
@@ -20,40 +62,64 @@ export default class CharListItem extends Component{
 
         const charID = url.split('/')[url.split('/').length - 2];
         const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charID}.png`;
+        const nameNew = name[0].toUpperCase() + name.slice(1);
 
-        const nameNew = name[0].toUpperCase() + name.slice(1)
-
-        const types = {
-
-        }
-
-        this.setState({
-            nameNew,
-            charID,
-            imgURL
-        })
-
+        fetch(url)
+        .then(res => res.json())
+        .then(
+            (item) => {
+                this.setState({
+                    nameNew,
+                    charID,
+                    imgLoading: true,
+                    manyRequests: false,
+                    imgURL,        
+                    charTypes: item.types
+                })
+            }
+        )
     }
-
 
     render () {
 
+        const {nameNew, imgURL, imgLoading, manyRequests, charTypes} = this.state;
         
-        // const charTypes = (
-        //     <CharTypes
-        //         getData={this.SerrvicePokedex.getResources}/>
-        // )
-
         return (
-            <div className="char-list__item">
-                <div className='img--wrapper char__img'>
-                    <img src={this.state.imgURL} alt=""/>
-                </div>
-                <h3 className='char__title'>{this.state.nameNew}</h3>
-                <CharTypes/>
+            <Card className="char-list__item">
+                <ImgWrapper>
+                    {
+                        imgLoading ? (
+                            <img
+                                src={spinner}
+                                style={{width: '5rem', height: '5rem'}}
+                                className='spinner'
+                                alt='Loading'/>
+                        ) : null
+                    }
 
-            </div>            
+                    <Sprite
+                        className='char-img'
+                        src={imgURL}
+                        alt='Hero image'
+                        onLoad={() => this.setState({imgLoading: false})}
+                        onError={() => this.setState({manyRequests: true})}
+                        style={
+                            manyRequests
+                                ? {display: 'none'}
+                                : imgLoading
+                                ? null
+                                : {display: 'block'}
+                        }
+                        />
+                    {manyRequests ? (
+                        <h4>To many requests</h4>
+                    ) : null}
+                </ImgWrapper>
+                <CardTitle className='char__title'>{nameNew}</CardTitle>
+                <CharTypes 
+                    types={charTypes}
+                />                
+            </Card>            
         )
-    
     }
 }

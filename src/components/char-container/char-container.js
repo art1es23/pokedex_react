@@ -1,53 +1,97 @@
 import React, { Component } from 'react';
-import CharList from '../char-list';
+import CharListItem from '../char-list-item';
+import styled from 'styled-components';
 
-// import ServicePokedex from '../../services';
-// import ErrorMessage from '../error-message';
+const CardContainer = styled.section`
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 2.5rem
 
-import './char-container.css';
+`;
+
+const CardBox = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    grid-gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+`;
+
+const LoadMoreBtn = styled.button`
+    grid-column: 1/2;
+
+`;
 
 export default class CharContainer extends Component {
+
+    state = {
+        url: 'https://pokeapi.co/api/v2/pokemon/',
+        chars: null,
+        error: null,
+        isLoaded: false,
+        selectedChar: 1
+    }
+
+    componentDidMount () {
+        fetch(this.state.url)
+        .then(res => res.json())
+        .then(
+            (item) => {
+                this.setState({
+                    isLoaded: true,
+                    chars: item.results
+                })
+            },
+            (error) => {
+                this.setState({
+                    isLoaded: true,
+                    error
+                })
+            }
+        )
+    }
     
-    // ServicePokedex = new ServicePokedex();
-
-    // state = {
-    //     selectedChars: 30,
-    //     error: false
-    // }
-
-    // onItemSelected = (id) => {
-    //     this.setState({
-    //         selectedChars: id
-    //     })
-    // }
-
-    // componentDidCatch () {
-    //     this.setState({
-    //         error: true
-    //     });
-    // }
+    onCharSelected = (id) => {
+        console.log('sadas');
+        this.setState({
+            selectedChar: id
+        })
+    }
 
     render () {
+        const {error, isLoaded, chars} = this.state;
 
-        // if (this.state.error) {
-        //     return <ErrorMessage/>
-        // }
-
-        // console.log(this.ServicePokedex.getAllChars);
-
-        const charList = (
-            <CharList
-                // onItemSelected={this.onItemSelected}
-                // getData={this.ServicePokedex.getResources}
-                // renderItem={({name}) => `${name}`}
-                />
-        )
-
+        const charList = () => {
+            if (error) {
+                return <p>Error {error.message}</p>
+            } else if (!isLoaded) {
+                return <h1>Loading...</h1>
+            } else {
+                const cardItems = chars.map(item => 
+                (
+                    <CharListItem
+                        key={item.name}
+                        name={item.name}
+                        url={item.url}
+                        onCharSelected={this.onCharSelected}/>
+                ));
+    
+                return (
+                    <CardBox className="char-list">
+                        {cardItems}
+                    </CardBox>
+                )
+            }
+        }
+        
         return (
-            <section className='char-container'>
-                {charList}
-                <button className='load-more'>Load more</button>
-            </section>
+            <CardContainer className='char-container'>
+                {charList()}
+                <section></section>
+                <LoadMoreBtn>Load more</LoadMoreBtn>
+            </CardContainer>
         )        
     }
 }
