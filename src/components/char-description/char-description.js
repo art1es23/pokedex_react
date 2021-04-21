@@ -48,26 +48,6 @@ const CardTitle = styled.h3`
     font-weight: 600;
 `;
 
-// const TypeListItem = styled.li`
-//     display: inline-block;
-//     text-align: center;
-//     // border: 1px solid orangered;
-//     margin: 0.25rem;
-//     padding: 0.25rem 0.75rem;
-//     border-radius: 4px;
-//     transition: all 0.3s ease-in-out;
-
-//     &:hover {
-//         cursor: pointer;
-//         color: white;
-//     }
-
-//     // background-color: ${props => props.bg}
-// `;
-
-// const Table = styled.table`
-
-// `;
 export default class CharCardDescription extends Component {
 
     ServicePokedex = new ServicePokedex();
@@ -76,14 +56,29 @@ export default class CharCardDescription extends Component {
         super(props);
 
         this.state = {
-            char: {},
+            char: null,
             error: false,
             imgURL: '',
+            charId: this.props.charId
             // nameNew: ''
         }
     }
 
+    onCharDetailsLoaded = (char) => {
+        this.setState({
+            char
+        });
+    }    
+
     componentDidMount () {
+        const {charId, getData} = this.props;
+        console.log(getData(charId));
+
+
+        getData(charId)
+        .then(this.onCharDetailsLoaded)
+        .catch(() => this.onError());
+
         this.updateItem();
     }
 
@@ -93,21 +88,15 @@ export default class CharCardDescription extends Component {
         }
     }
 
-    onCharDetailsLoaded = (char) => {
-        this.setState({
-            char
-        });
-    }
-
     updateItem () {
         const {charId, getData} = this.props;
-        // if (!charId) return;
+        if (!charId) return;
         const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charId}.png`;
         
         this.setState({
             imgURL
         });
-
+        
         getData(charId)
             .then(this.onCharDetailsLoaded)
             .catch(() => this.onError());
@@ -115,7 +104,7 @@ export default class CharCardDescription extends Component {
 
     onError () {
         this.setState({
-            char: [],
+            char: null,
             imgURL: '',
             error: true
         });
@@ -139,6 +128,9 @@ export default class CharCardDescription extends Component {
     render () {
 
         const {char, imgURL} = this.state;
+
+        if (char === null) return (<div>SPINNER</div>)
+        
         const {name, types, moves, weight} = char;
 
         console.log(char);
