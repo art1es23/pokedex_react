@@ -34,7 +34,6 @@ export default class CharContainer extends Component {
         super(props);
 
         this.state = {
-            // url: 'https://pokeapi.co/api/v2/pokemon/',
             chars: null,
             error: null,
             isLoaded: false,
@@ -60,11 +59,18 @@ export default class CharContainer extends Component {
             }
         )
     }
+
+    onCharSelected = (id) => {
+        // console.log(id);
+        this.setState({
+            selectedChar: id
+        })
+    }
     
     render () {
         const {error, isLoaded, chars, selectedChar} = this.state;
 
-        console.log(selectedChar);
+        // console.log(selectedChar);
 
         const charList = () => {
             if (error) {
@@ -78,14 +84,14 @@ export default class CharContainer extends Component {
                         key={index}
                         name={item.name}
                         url={item.url}
-                        // selectedChar={selectedChar}
+                        charId={selectedChar}
                         onCharSelected={this.onCharSelected}
                         />
                 ));
     
                 return (
                     <CardBox 
-                        charId={this.onCharSelected}
+                        // charId={this.onCharSelected}
                         getData={this.ServicePokedex.getResources}
                         >
                         {cardItems}

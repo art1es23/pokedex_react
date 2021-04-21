@@ -56,7 +56,7 @@ export default class CharListItem extends Component{
         this.state = {
             nameNew: '',
             imgURL: '',
-            charID: '',
+            charId: '',
             imgLoading: true,
             manyRequests: false,
             charTypes: []
@@ -67,8 +67,8 @@ export default class CharListItem extends Component{
     componentDidMount () {
         const {name, url} = this.props;
 
-        const charID = url.split('/')[url.split('/').length - 2];
-        const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charID}.png`;
+        const charId = url.split('/')[url.split('/').length - 2];
+        const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charId}.png`;
         const nameNew = name[0].toUpperCase() + name.slice(1);
 
         fetch(url)
@@ -77,7 +77,7 @@ export default class CharListItem extends Component{
             (item) => {
                 this.setState({
                     nameNew,
-                    charID,
+                    charId,
                     imgLoading: true,
                     manyRequests: false,
                     imgURL,        
@@ -87,19 +87,20 @@ export default class CharListItem extends Component{
         )
     }
 
-    onCharSelected = (id) => {
-        this.setState({
-            charID: id
-        })
-    }
+    // onCharSelected = (id) => {
+    //     // console.log(id);
+    //     this.setState({
+    //         selectedChar: id
+    //     })
+    // }
 
     render () {
 
-        const {nameNew, imgURL, imgLoading, manyRequests, charTypes, charID} = this.state;
+        const {nameNew, imgURL, imgLoading, manyRequests, charTypes, charId} = this.state;
 
         return (
             <Card 
-                onClick={() => this.onCharSelected(charID)}
+                onClick={() => this.props.onCharSelected(charId)}
                 >
                 <ImgWrapper>
                     {

@@ -47,9 +47,10 @@ const TypeListItem = styled.li`
 class CharTypes extends Component {
 
     renderItems = (arr) => {
-        return arr.map((item, index) => {
+        return arr.map((item) => {
 
-            const {name} = item.type;            
+            const {slot, type} = item;
+            const {name} = type;            
 
             if (!Object.keys(COLORS).includes(name)) return false;
             let bgColor = COLORS[name];
@@ -57,7 +58,7 @@ class CharTypes extends Component {
             return (
                 <TypeListItem
                     bg={bgColor}
-                    key={index}>
+                    key={slot}>
                         {name}
                 </TypeListItem>
             )

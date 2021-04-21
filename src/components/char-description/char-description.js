@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 import ServicePokedex from '../../services';
 
-import spinner from '../spinner/Spinner-5.gif';
-
 const CharDescriptionWrapper = styled.div`
     display: flex;
     width: 100%;
@@ -24,6 +22,52 @@ const CharDescription = styled.div`
     align-items: center;
 `;
 
+const ImgWrapper = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+`;
+
+const Sprite = styled.img`
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+`;
+
+const CardTitle = styled.h3`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+`;
+
+// const TypeListItem = styled.li`
+//     display: inline-block;
+//     text-align: center;
+//     // border: 1px solid orangered;
+//     margin: 0.25rem;
+//     padding: 0.25rem 0.75rem;
+//     border-radius: 4px;
+//     transition: all 0.3s ease-in-out;
+
+//     &:hover {
+//         cursor: pointer;
+//         color: white;
+//     }
+
+//     // background-color: ${props => props.bg}
+// `;
+
+// const Table = styled.table`
+
+// `;
 export default class CharCardDescription extends Component {
 
     ServicePokedex = new ServicePokedex();
@@ -32,9 +76,10 @@ export default class CharCardDescription extends Component {
         super(props);
 
         this.state = {
-            char: [],
-            loading: true,
-            // types: []
+            char: {},
+            error: false,
+            imgURL: '',
+            // nameNew: ''
         }
     }
 
@@ -50,92 +95,108 @@ export default class CharCardDescription extends Component {
 
     onCharDetailsLoaded = (char) => {
         this.setState({
-            char,
-            loading: false
+            char
         });
     }
-
 
     updateItem () {
         const {charId, getData} = this.props;
-        if (!charId) return;
-
+        // if (!charId) return;
+        const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charId}.png`;
+        
         this.setState({
-            loading: true
+            imgURL
         });
 
-        // console.log(charId);
-
         getData(charId)
-        .then(this.onCharDetailsLoaded)
-        .catch()
-
+            .then(this.onCharDetailsLoaded)
+            .catch(() => this.onError());
     }
 
-    // renderItems = (arr) => {
-    //     return arr.map((item, index) => {
+    onError () {
+        this.setState({
+            char: [],
+            imgURL: '',
+            error: true
+        });
+    }
 
-    //         const {name} = item.type;            
+    renderItems = (arr) => {
+        return arr.map((item) => {
+            const {slot, type} = item;  
+            const {name} = type;          
 
-    //         // if (!Object.keys(COLORS).includes(name)) return false;
-    //         // let bgColor = COLORS[name];
-
-    //         return (
-    //             <span
-    //                 // bg={bgColor}
-    //                 key={index}>
-    //                     {name}
-    //             </span>
-    //         )
-    //     })
-    // }
-
+            return (
+                <span
+                    key={slot}>
+                        {name}
+                </span>
+            )
+        })
+    }
+    
 
     render () {
-        const {char} = this.state;
-        const {name, types, weight} = char;
+
+        const {char, imgURL} = this.state;
+        const {name, types, moves, weight} = char;
+
+        console.log(char);
+        console.log('Name:', name);
+        console.log('Types:', types);
+        console.log('Moves:', moves);
+        console.log('Weight:', weight);
+
+        const itemList = this.renderItems(types);
 
         // attack, defence, hp, sp attack, sp defence, speed, weight, total moves 
-
-        // console.log('type ', types);
-        // const typeItems = this.renderItems(types);
-
         return (
             <CharDescriptionWrapper>
                 <CharDescription>
-                    <img src={spinner} alt=""/>
-                    <h3>{name}</h3>
-                    <table>
-                        {/* <tr>
-                            <th><span>Type</span></th>
-                            <td>
-                                {typeItems}
-                            </td>
-                        </tr> */}
-                        {/* <tr>
-                            <th>Title</th>
-                            <td>Text</td>
+                    <ImgWrapper>
+                        <Sprite src={imgURL} alt=""/>
+                    </ImgWrapper>
+                    <CardTitle>{name}</CardTitle>
+                    <table border='1' width='100%'>
+                        <tbody>
+                        <tr>
+                            <th>Type</th>
+                            <td>{itemList}</td>
                         </tr>
                         <tr>
-                            <th>Title</th>
-                            <td>Text</td>
+                            <th>Attack</th>
+                            <td>Value</td>
                         </tr>
                         <tr>
-                            <th>Title</th>
-                            <td>Text</td>
+                            <th>Defence</th>
+                            <td>Value</td>
                         </tr>
                         <tr>
-                            <th>Title</th>
-                            <td>Text</td>
+                            <th>HP</th>
+                            <td>Value</td>
                         </tr>
                         <tr>
-                            <th>Title</th>
-                            <td>Text</td>
+                            <th>SP Attack</th>
+                            <td>Value</td>
                         </tr>
                         <tr>
-                            <th>Title</th>
-                            <td>Text</td>
-                        </tr> */}
+                            <th>SP Defence</th>
+                            <td>Value</td>
+                        </tr>
+                        <tr>
+                            <th>Speed</th>
+                            <td>Value</td>
+                        </tr>
+                        <tr>
+                            <th>Weight</th>
+                            <td>Value</td>
+                        </tr>
+                        <tr>
+                            <th>Total moves</th>
+                            <td>Value</td>
+                        </tr>
+
+                        </tbody>                        
                     </table>
                 </CharDescription>   
             </CharDescriptionWrapper>
