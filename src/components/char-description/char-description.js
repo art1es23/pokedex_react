@@ -3,6 +3,23 @@ import styled from 'styled-components';
 
 import ServicePokedex from '../../services';
 
+const COLORS = {
+    fire: '#FF5300',
+    grass: '#00AA00',
+    electric: '#5ED1BA',
+    water: '#1240AB',
+    ground: '#A64B00',
+    rock: '#6A8D8D',
+    fairy: '#6AFF00',
+    poison: '#00FF00',
+    bug: '#BC00FF',
+    dragon: '#FFE340',
+    physic: '#FF40FF',
+    flying: '#69C9BC',
+    fighting: '#A60004',
+    normal: '#FFFFFF'
+};
+
 const CharDescriptionWrapper = styled.div`
     display: flex;
     width: 100%;
@@ -13,11 +30,11 @@ const CharDescriptionWrapper = styled.div`
 const CharDescription = styled.div`
     position: sticky;
     top: 50%;
-    transform: translate(25%, -50%);
+    transform: translate(0%, -50%);
     height: 60vh;
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 45%;
     justify-content: center;
     align-items: center;
 `;
@@ -48,6 +65,17 @@ const CardTitle = styled.h3`
     font-weight: 600;
 `;
 
+
+const TypeListItem = styled.span`
+    display: inline-block;
+    text-align: center;
+    margin: 0.25rem;
+    padding: 0.35rem;
+    border-radius: 4px;
+    background-color: ${props => props.bg};  
+`;
+
+
 export default class CharCardDescription extends Component {
 
     ServicePokedex = new ServicePokedex();
@@ -58,9 +86,7 @@ export default class CharCardDescription extends Component {
         this.state = {
             char: null,
             error: false,
-            imgURL: '',
-            charId: this.props.charId
-            // nameNew: ''
+            imgURL: ''
         }
     }
 
@@ -72,8 +98,6 @@ export default class CharCardDescription extends Component {
 
     componentDidMount () {
         const {charId, getData} = this.props;
-        console.log(getData(charId));
-
 
         getData(charId)
         .then(this.onCharDetailsLoaded)
@@ -115,11 +139,15 @@ export default class CharCardDescription extends Component {
             const {slot, type} = item;  
             const {name} = type;          
 
+            if (!Object.keys(COLORS).includes(name)) return false;
+            let bgColor = COLORS[name];
+
             return (
-                <span
-                    key={slot}>
+                <TypeListItem
+                    key={slot}
+                    bg={bgColor}>
                         {name}
-                </span>
+                </TypeListItem>
             )
         })
     }
@@ -181,11 +209,11 @@ export default class CharCardDescription extends Component {
                         </tr>
                         <tr>
                             <th>Weight</th>
-                            <td>Value</td>
+                            <td>{weight}</td>
                         </tr>
                         <tr>
                             <th>Total moves</th>
-                            <td>Value</td>
+                            <td>{moves.length}</td>
                         </tr>
 
                         </tbody>                        

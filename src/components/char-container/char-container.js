@@ -23,7 +23,21 @@ const CardBox = styled.div`
 `;
 
 const LoadMoreBtn = styled.button`
-    grid-column: 1/2;
+    grid-column: 1/4;
+    padding: 1rem;
+    margin-bottom: 5rem;
+    box-shadow: 5px 5px 10px 1px rgba(0,0,0,0.35);
+    border: none;
+    background-color: transparent;
+    transition: all 0.3s ease-in-out;
+
+    font-size: 1.75rem;
+
+    &:hover {
+        cursor: pointer;
+        color: rgba(255,50,50,1);
+        box-shadow: 0 0 10px 1px rgba(255,50,50,0.75);
+    }
 `;
 
 export default class CharContainer extends Component {
@@ -37,7 +51,8 @@ export default class CharContainer extends Component {
             chars: null,
             error: null,
             isLoaded: false,
-            selectedChar: 1
+            selectedChar: 1,
+            countVisibleItems: 12
         }
     }
 
@@ -66,9 +81,19 @@ export default class CharContainer extends Component {
             selectedChar: id
         })
     }
+
+    onChangeCountVisibleItems = () => {
+        let {countVisibleItems} =this.state;
+        countVisibleItems += countVisibleItems;
+        
+        this.setState({
+            countVisibleItems
+        })
+
+    }
     
     render () {
-        const {error, isLoaded, chars, selectedChar} = this.state;
+        const {error, isLoaded, chars, selectedChar, countVisibleItems} = this.state;
 
         // console.log(selectedChar);
 
@@ -78,7 +103,7 @@ export default class CharContainer extends Component {
             } else if (!isLoaded) {
                 return <h1>Loading...</h1>
             } else {
-                const cardItems = chars.map((item, index) => 
+                const cardItems = chars.slice(0, countVisibleItems).map((item, index) => 
                 (
                     <CharListItem
                         key={index}
@@ -95,6 +120,10 @@ export default class CharContainer extends Component {
                         getData={this.ServicePokedex.getResources}
                         >
                         {cardItems}
+
+                        <LoadMoreBtn
+                            onClick={this.onChangeCountVisibleItems}
+                        >Load more</LoadMoreBtn>
                     </CardBox>
                 )
             }
@@ -112,7 +141,6 @@ export default class CharContainer extends Component {
             <CardContainer className='char-container'>
                 {charList()}
                 {charDescription}
-                <LoadMoreBtn>Load more</LoadMoreBtn>
             </CardContainer>
         )        
     }
