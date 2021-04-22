@@ -23,29 +23,62 @@ const COLORS = {
 };
 
 const CharDescriptionWrapper = styled.div`
-    display: flex;
+    // display: flex;
+    display: ${active => active === true ? 'flex' : 'none'};
     width: 100%;
+    top: 0;
+    left: 0;
+    height: 100vh;
     justify-content: center;
     align-items: center;
+    position: fixed;
+    background-color: white;
+    box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
+
+    @media only screen and (min-width: 1024px) {
+        position: sticky;
+        display: flex;
+        box-shadow: none;
+    }
 `;
 
 const CharDescription = styled.div`
-    position: fixed;
-    top: 50%;
-    transform: translate(0%, -50%);
-    height: 60vh;
     display: flex;
     flex-direction: column;
-    width: 25%;
+    width: 100%;
     justify-content: center;
     align-items: center;
-    box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
     padding: 2.5rem 5rem;
     transition: box-shadow 0.3s ease-in-out;
-    &:hover {
-        box-shadow: inset 0 0 10px 1px rgba(100,0,0,0.75);
-    }
 
+    @media only screen and (min-width: 1024px) {
+        box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
+        width: 80%;
+        padding: 2.5rem;
+        &:hover {
+            box-shadow: inset 0 0 10px 1px rgba(100,0,0,0.75);
+        }
+    }
+    @media only screen and (min-width: 1600px) {
+        width: 65%;
+    }
+`;
+
+const CloseBtn = styled.div`
+    position: absolute;
+    top: 7.5%;
+    right: 2.5%;
+    font-size: 2.5rem;
+    line-height: 3rem;
+    color: black;
+    display: block;
+    padding: 0.75rem 1rem;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+
+    @media only screen and (min-width: 1024px) {
+        display: none;
+    }
 `;
 
 const CharDescriptionTable = styled.table`
@@ -72,7 +105,6 @@ const CardTitle = styled.h3`
     justify-content: center;
     align-items: center;
     margin: 1rem 0;
-
     text-align: center;
     font-size: 1.25rem;
     font-weight: 600;
@@ -183,10 +215,12 @@ export default class CharCardDescription extends Component {
         })
     }
     
+    changeActive = (act) => !act;
 
     render () {
 
         const {char, imgURL} = this.state;
+        const {active} = this.props;
 
         if (char === null) return (<div><img src={spinner} alt=""/></div>)
         
@@ -198,7 +232,10 @@ export default class CharCardDescription extends Component {
 
         // attack, defence, hp, sp attack, sp defence, speed, weight, total moves 
         return (
-            <CharDescriptionWrapper>
+            <CharDescriptionWrapper
+                active={active}
+            >
+                <CloseBtn onClick={() => this.changeActive(active)}>X</CloseBtn>
                 <CharDescription>
                     <ImgWrapper>
                         <Sprite src={imgURL} alt=""/>

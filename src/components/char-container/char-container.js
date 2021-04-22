@@ -6,24 +6,44 @@ import styled from 'styled-components';
 import ServicePokedex from '../../services';
 
 const CardContainer = styled.section`
+    // display: grid;
+    // width: 100%;
+    // grid-template-columns: repeat(21, 1fr);
+    // grid-gap: 2.5rem;
+    // position: relative;
+
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2.5rem;
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 1rem;
     position: relative;
+    
+    @media only screen and (min-width: 1024px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
 `;
 
 const CardBox = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
     grid-gap: 1.5rem;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
+
+    @media only screen and (min-width: 600px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    @media only screen and (min-width: 768px) {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    @media only screen and (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 `;
 
 const LoadMoreBtn = styled.button`
-    grid-column: 1/4;
+    grid-column: 1/3;
     padding: 1rem;
     margin-bottom: 5rem;
     box-shadow: 5px 5px 10px 1px rgba(0,0,0,0.35);
@@ -38,6 +58,17 @@ const LoadMoreBtn = styled.button`
         color: rgba(100,0,0,1);
         box-shadow: 0 0 10px 1px rgba(100,0,0,0.75);
     }
+    @media only screen and (min-width: 600px) {
+        grid-column: 1/4;
+    }
+    @media only screen and (min-width: 768px) {
+        grid-column: 1/5;
+        margin: 2.5rem 0 5rem;
+    }
+    @media only screen and (min-width: 1024px) {
+        grid-column: 1/4;
+    }
+
 `;
 
 export default class CharContainer extends Component {
@@ -53,7 +84,8 @@ export default class CharContainer extends Component {
             isLoaded: false,
             selectedChar: 1,
             countVisibleItems: 12,
-            filterType: ''
+            filterType: '',
+            active: false
         }
     }
 
@@ -84,8 +116,10 @@ export default class CharContainer extends Component {
     onCharSelected = (id) => {
         // console.log(id);
         this.setState({
-            selectedChar: id
+            selectedChar: id,
+            active: true
         })
+
     }
 
     onChangeCountVisibleItems = () => {
@@ -126,9 +160,9 @@ export default class CharContainer extends Component {
     }
     
     render () {
-        const {error, isLoaded, chars, selectedChar, countVisibleItems} = this.state;
+        const {error, isLoaded, chars, selectedChar, countVisibleItems, active} = this.state;
 
-        console.log(chars);
+        console.log(active);
         const charList = () => {
             if (error) {
                 return <p>Error {error.message}</p>
@@ -149,7 +183,6 @@ export default class CharContainer extends Component {
     
                 return (
                     <CardBox 
-                        // charId={this.onCharSelected}
                         getData={this.ServicePokedex.getResources}
                         >
                         {cardItems}
@@ -161,12 +194,12 @@ export default class CharContainer extends Component {
                 )
             }
         }
-        // console.log('s', this.state.selectedChar);
 
         const charDescription = (
             <CharCardDescription
                 charId={this.state.selectedChar}
                 getData={this.ServicePokedex.getChar}
+                active={active}
             />
         )
         

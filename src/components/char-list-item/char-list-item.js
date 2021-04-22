@@ -11,7 +11,7 @@ const Card = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1.5rem;
+    padding: 0.5rem;
 
     border-radius: 4px;
     box-shadow: 10px 10px 15px 2.5px rgba(0,0,0,0.25);
@@ -49,7 +49,8 @@ const ImgWrapper = styled.div`
 
 const Sprite = styled.img`
     width: 90%;
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
 `;
 
 const CardTitle = styled.h3`

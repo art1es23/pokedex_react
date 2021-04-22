@@ -6,8 +6,11 @@ import styled from 'styled-components';
 const MainApp = styled.main`
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    width: 80%;
+    width: 94%;
     margin: 0 auto;
+    @media only screen and (min-width: 1366px) {
+        width: 80%
+    }
 `;
 
 const MainTitle = styled.h1`
@@ -22,6 +25,10 @@ const MainTitle = styled.h1`
     font-size: 3rem;
     line-height: 3.25rem;
     letter-spacing: 2.5px;
+    
+    @media only screen and (min-width: 1024px) {
+        grid-column: 1/3;
+    }
 `;
 
 class App extends Component {
