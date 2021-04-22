@@ -119,13 +119,11 @@ export default class CharContainer extends Component {
         countVisibleItems = countVisibleItems + 12;
         
         this.setState(() => ({
-            countVisibleItems,
-            ...this.state.chars
+            countVisibleItems
         }))
     }
 
     filterCards = (type) => {
-        // this.initCards();
         let {chars} = this.state;
         let newArr = [];
 
@@ -137,6 +135,8 @@ export default class CharContainer extends Component {
 
                 const filterData = filter.some(el => el === true);
                 if (!filterData) return false;
+
+                console.log(item);
 
                 newArr.push(item);
                 return this.setState(() => ({
@@ -150,6 +150,7 @@ export default class CharContainer extends Component {
     render () {
         const {error, isLoaded, chars, selectedChar, countVisibleItems, active} = this.state;
 
+        console.log(chars);
         const charList = () => {
             if (error) {
                 return <p>Error {error.message}</p>
@@ -173,10 +174,9 @@ export default class CharContainer extends Component {
                         getData={this.ServicePokedex.getResources}
                         >
                         {cardItems}
-
                         <LoadMoreBtn
-                            onClick={this.onChangeCountVisibleItems}
-                        >Load more</LoadMoreBtn>
+                            onClick={this.onChangeCountVisibleItems}>
+                                Load more</LoadMoreBtn>
                     </CardBox>
                 )
             }
