@@ -109,7 +109,10 @@ export default class CharListItem extends Component{
 
         return (
             <Card 
-                onClick={() => this.props.onCharSelected(charId)}
+                onClick={() => {
+                    // console.log(this.props.active);
+                    this.props.onCharSelected(charId)
+                }}
                 >
                 <ImgWrapper>
                     {

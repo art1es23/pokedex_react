@@ -108,11 +108,12 @@ export default class CharContainer extends Component {
     //     if (prevState.chars !== this.state.chars ) {
     //         // this.initCards();
     //         // this.filterCards(this.state.filterType);
-    //         // this.onChangeCountVisibleItems()
+    //         this.onChangeCountVisibleItems()
     //     }
     // }
 
     onCharSelected = (id) => {
+        document.querySelector('.modal').classList.add('modal--open');
         this.setState({
             selectedChar: id,
             active: true
@@ -130,7 +131,7 @@ export default class CharContainer extends Component {
     }
 
     filterCards = (type) => {
-        // this.initCards();
+        this.initCards();
         let {chars} = this.state;
         let newArr = [];
 
@@ -145,11 +146,12 @@ export default class CharContainer extends Component {
                     if (!filterData) return false;
 
                     newArr.push(item);
-                    return newArr;
                 }
             )
-        })
-                            
+            return newArr;
+        })   
+        
+        this.onChangeCountVisibleItems();
         this.setState({
             chars: newArr,
             filterType: type

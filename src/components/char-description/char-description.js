@@ -23,8 +23,7 @@ const COLORS = {
 };
 
 const CharDescriptionWrapper = styled.div`
-    // display: flex;
-    display: ${active => active === true ? 'flex' : 'none'};
+    // display: ${active => (active ? 'flex': 'none')};
     width: 100%;
     top: 0;
     left: 0;
@@ -34,7 +33,9 @@ const CharDescriptionWrapper = styled.div`
     position: fixed;
     background-color: white;
     box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
-
+    @media only screen and (min-width: 768px) {
+        width: 100%;
+    }
     @media only screen and (min-width: 1024px) {
         position: sticky;
         display: flex;
@@ -50,7 +51,7 @@ const CharDescription = styled.div`
     align-items: center;
     padding: 2.5rem 5rem;
     transition: box-shadow 0.3s ease-in-out;
-
+    
     @media only screen and (min-width: 1024px) {
         box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
         width: 80%;
@@ -132,7 +133,8 @@ export default class CharCardDescription extends Component {
         this.state = {
             char: null,
             error: false,
-            imgURL: ''
+            imgURL: '',
+            active: false
         }
     }
 
@@ -155,16 +157,18 @@ export default class CharCardDescription extends Component {
     componentDidUpdate (prevProps) {
         if (this.props.charId !== prevProps.charId) {
             this.updateItem();
+            this.handleClick();
         }
     }
 
     updateItem () {
-        const {charId, getData} = this.props;
+        const {charId, getData, active} = this.props;
         if (!charId) return;
         const imgURL = `https://pokeres.bastionbot.org/images/pokemon/${charId}.png`;
         
         this.setState({
-            imgURL
+            imgURL,
+            active
         });
         
         getData(charId)
@@ -214,12 +218,16 @@ export default class CharCardDescription extends Component {
         })
     }
     
-    changeActive = (act) => !act;
+    handleClick() {
+        document.querySelector('.modal').classList.remove('modal--open');
+        this.setState(state => ({
+            active: !state.active
+        }));  
+    }
 
     render () {
 
         const {char, imgURL} = this.state;
-        const {active} = this.props;
 
         if (char === null) return (<div><img src={spinner} alt=""/></div>)
         
@@ -230,10 +238,11 @@ export default class CharCardDescription extends Component {
         const nameNew = name[0].toUpperCase() + name.slice(1);
 
         return (
-            <CharDescriptionWrapper
-                active={active}
-            >
-                <CloseBtn onClick={() => this.changeActive(active)}>X</CloseBtn>
+            <CharDescriptionWrapper 
+                className='modal'
+                // active={active}
+                >
+                <CloseBtn onClick={() => this.handleClick()}>X</CloseBtn>
                 <CharDescription>
                     <ImgWrapper>
                         <Sprite src={imgURL} alt=""/>
