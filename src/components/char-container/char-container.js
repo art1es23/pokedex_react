@@ -131,7 +131,7 @@ export default class CharContainer extends Component {
     }
 
     filterCards = (type) => {
-        this.initCards();
+        // this.initCards();
         let {chars} = this.state;
         let newArr = [];
 
