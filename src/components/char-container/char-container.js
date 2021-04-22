@@ -90,7 +90,7 @@ export default class CharContainer extends Component {
 
     onChangeCountVisibleItems = () => {
         let {countVisibleItems} = this.state;
-        countVisibleItems += countVisibleItems;
+        countVisibleItems = countVisibleItems + 12;
         
         this.setState({
             countVisibleItems
@@ -128,6 +128,7 @@ export default class CharContainer extends Component {
     render () {
         const {error, isLoaded, chars, selectedChar, countVisibleItems} = this.state;
 
+        console.log(chars);
         const charList = () => {
             if (error) {
                 return <p>Error {error.message}</p>
