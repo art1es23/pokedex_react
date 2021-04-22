@@ -6,12 +6,6 @@ import styled from 'styled-components';
 import ServicePokedex from '../../services';
 
 const CardContainer = styled.section`
-    // display: grid;
-    // width: 100%;
-    // grid-template-columns: repeat(21, 1fr);
-    // grid-gap: 2.5rem;
-    // position: relative;
-
     display: grid;
     width: 100%;
     grid-template-columns: repeat(1, 1fr);
@@ -50,7 +44,6 @@ const LoadMoreBtn = styled.button`
     border: none;
     background-color: transparent;
     transition: all 0.3s ease-in-out;
-
     font-size: 1.75rem;
 
     &:hover {
@@ -58,6 +51,7 @@ const LoadMoreBtn = styled.button`
         color: rgba(100,0,0,1);
         box-shadow: 0 0 10px 1px rgba(100,0,0,0.75);
     }
+
     @media only screen and (min-width: 600px) {
         grid-column: 1/4;
     }
@@ -68,7 +62,6 @@ const LoadMoreBtn = styled.button`
     @media only screen and (min-width: 1024px) {
         grid-column: 1/4;
     }
-
 `;
 
 export default class CharContainer extends Component {
@@ -84,12 +77,12 @@ export default class CharContainer extends Component {
             isLoaded: false,
             selectedChar: 1,
             countVisibleItems: 12,
-            filterType: '',
-            active: false
+            active: false,
+            filterType: ''
         }
     }
 
-    componentDidMount () {
+    initCards = () => {
         this.ServicePokedex.getResources()
         .then(
             (item) => {
@@ -107,14 +100,19 @@ export default class CharContainer extends Component {
         )
     }
 
-    // componentDidUpdate (prevProps) {
-    //     if (this.state.chars !== prevProps.chars) {
-    //         this.updateState()
+    componentDidMount () {
+        this.initCards();
+    }
+
+    // componentDidUpdate (prevState) {
+    //     if (prevState.chars !== this.state.chars ) {
+    //         // this.initCards();
+    //         // this.filterCards(this.state.filterType);
+    //         // this.onChangeCountVisibleItems()
     //     }
     // }
 
     onCharSelected = (id) => {
-        // console.log(id);
         this.setState({
             selectedChar: id,
             active: true
@@ -132,9 +130,8 @@ export default class CharContainer extends Component {
     }
 
     filterCards = (type) => {
-        
+        // this.initCards();
         let {chars} = this.state;
-
         let newArr = [];
 
         chars.map(item => {
@@ -156,13 +153,12 @@ export default class CharContainer extends Component {
         this.setState({
             chars: newArr,
             filterType: type
-        })        
+        })     
     }
     
     render () {
         const {error, isLoaded, chars, selectedChar, countVisibleItems, active} = this.state;
 
-        console.log(active);
         const charList = () => {
             if (error) {
                 return <p>Error {error.message}</p>

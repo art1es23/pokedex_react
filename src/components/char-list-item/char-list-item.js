@@ -78,7 +78,6 @@ export default class CharListItem extends Component{
             manyRequests: false,
             charTypes: []
         }
-    
     }
 
     componentDidMount () {

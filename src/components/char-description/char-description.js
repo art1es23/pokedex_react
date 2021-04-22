@@ -203,7 +203,6 @@ export default class CharCardDescription extends Component {
         return arr.map((item, index) => {
 
             const {stat: {name}, base_stat} = item;
-
             const nameNew = name[0].toUpperCase() + name.slice(1);
 
             return (
@@ -230,7 +229,6 @@ export default class CharCardDescription extends Component {
 
         const nameNew = name[0].toUpperCase() + name.slice(1);
 
-        // attack, defence, hp, sp attack, sp defence, speed, weight, total moves 
         return (
             <CharDescriptionWrapper
                 active={active}
