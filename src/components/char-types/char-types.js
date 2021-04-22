@@ -15,7 +15,7 @@ const COLORS = {
     physic: '#FF40FF',
     flying: '#69C9BC',
     fighting: '#A60004',
-    normal: '#FFFFFF'
+    normal: '#BBBBBB'
 };
 
 const TypeList = styled.ul`
@@ -54,12 +54,15 @@ class CharTypes extends Component {
 
             if (!Object.keys(COLORS).includes(name)) return false;
             let bgColor = COLORS[name];
+            const nameNew = name[0].toUpperCase() + name.slice(1);
 
             return (
                 <TypeListItem
                     bg={bgColor}
-                    key={slot}>
-                        {name}
+                    key={slot}
+                    onClick={() => {this.props.filterCards(name)}}
+                    >
+                        {nameNew}
                 </TypeListItem>
             )
         })

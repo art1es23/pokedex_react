@@ -8,9 +8,15 @@ export default class ServicePokedex {
         return await res.json();
     }
 
-    getChar = async (id, url) => {
+    getChar = async (id) => {
         const res = await fetch(`${this._url}${id}`);
         return await res.json();
     }
+
+    getFilterChar = async (url) => {
+        const res = await fetch(url);
+        return await res.json();
+    }
+
 
 }

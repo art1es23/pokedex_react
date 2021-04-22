@@ -18,21 +18,37 @@ const Card = styled.div`
     transition: all 0.3s ease-in-out;
 
     &:hover {
-        background-color: rgba(100, 0, 0, 0.2);
+        box-shadow: 0 0 10px 1px rgba(100, 0, 0.25);
+        // background-color: rgba(100, 0, 0, 0.2);
         cursor: pointer;
     }
 `;
 
 const ImgWrapper = styled.div`
     display: flex;
-    width: 100%;
+    width: 80%;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+        width: 100%
+        height: 100%;
+
+        background-color: black;
+        border-radius: 50%;
+    }
 `;
 
 const Sprite = styled.img`
-    width: 60%;
+    width: 90%;
     object-fit: cover;
 `;
 
@@ -87,13 +103,6 @@ export default class CharListItem extends Component{
         )
     }
 
-    // onCharSelected = (id) => {
-    //     // console.log(id);
-    //     this.setState({
-    //         selectedChar: id
-    //     })
-    // }
-
     render () {
 
         const {nameNew, imgURL, imgLoading, manyRequests, charTypes, charId} = this.state;
@@ -134,6 +143,7 @@ export default class CharListItem extends Component{
                 <CardTitle className='char__title'>{nameNew}</CardTitle>
                 <CharTypes 
                     types={charTypes}
+                    filterCards={this.props.filterCards}
                 />                
             </Card>            
         )

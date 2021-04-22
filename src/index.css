@@ -18,6 +18,8 @@ code {
     monospace;
 }
 
-th, td {
+table, th, td {
   padding: 0.25rem;
+  border: 1px solid black;
+  text-align: center;
 }

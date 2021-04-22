@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import ServicePokedex from '../../services';
 
+import spinner from '../spinner/Spinner-5.gif';
+
 const COLORS = {
     fire: '#FF5300',
     grass: '#00AA00',
@@ -17,7 +19,7 @@ const COLORS = {
     physic: '#FF40FF',
     flying: '#69C9BC',
     fighting: '#A60004',
-    normal: '#FFFFFF'
+    normal: '#BBBBBB'
 };
 
 const CharDescriptionWrapper = styled.div`
@@ -28,15 +30,21 @@ const CharDescriptionWrapper = styled.div`
 `;
 
 const CharDescription = styled.div`
-    position: sticky;
+    position: fixed;
     top: 50%;
     transform: translate(0%, -50%);
     height: 60vh;
     display: flex;
     flex-direction: column;
-    width: 45%;
+    width: 25%;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 0 15px 5px rgba(0,0,0,0.35);
+    padding: 2.5rem 5rem;
+`;
+
+const CharDescriptionTable = styled.table`
+    border-collapse: collapse;
 `;
 
 const ImgWrapper = styled.div`
@@ -72,6 +80,7 @@ const TypeListItem = styled.span`
     margin: 0.25rem;
     padding: 0.35rem;
     border-radius: 4px;
+    color: white;
     background-color: ${props => props.bg};  
 `;
 
@@ -135,19 +144,36 @@ export default class CharCardDescription extends Component {
     }
 
     renderItems = (arr) => {
-        return arr.map((item) => {
+        return arr.map(item => {
             const {slot, type} = item;  
             const {name} = type;          
 
             if (!Object.keys(COLORS).includes(name)) return false;
             let bgColor = COLORS[name];
+            const nameNew = name[0].toUpperCase() + name.slice(1);
 
             return (
                 <TypeListItem
                     key={slot}
                     bg={bgColor}>
-                        {name}
+                        {nameNew}
                 </TypeListItem>
+            )
+        })
+    }
+
+    renderStatsList = (arr) => {
+        return arr.map((item, index) => {
+
+            const {stat: {name}, base_stat} = item;
+
+            const nameNew = name[0].toUpperCase() + name.slice(1);
+
+            return (
+                <tr key={index}>
+                    <th>{nameNew}</th>
+                    <td>{base_stat}</td>
+                </tr>
             )
         })
     }
@@ -157,17 +183,13 @@ export default class CharCardDescription extends Component {
 
         const {char, imgURL} = this.state;
 
-        if (char === null) return (<div>SPINNER</div>)
+        if (char === null) return (<div><img src={spinner} alt=""/></div>)
         
-        const {name, types, moves, weight} = char;
-
-        console.log(char);
-        console.log('Name:', name);
-        console.log('Types:', types);
-        console.log('Moves:', moves);
-        console.log('Weight:', weight);
-
+        const {name, types, moves, weight, stats} = char;
         const itemList = this.renderItems(types);
+        const statsList = this.renderStatsList(stats);
+
+        const nameNew = name[0].toUpperCase() + name.slice(1);
 
         // attack, defence, hp, sp attack, sp defence, speed, weight, total moves 
         return (
@@ -176,37 +198,14 @@ export default class CharCardDescription extends Component {
                     <ImgWrapper>
                         <Sprite src={imgURL} alt=""/>
                     </ImgWrapper>
-                    <CardTitle>{name}</CardTitle>
-                    <table border='1' width='100%'>
+                    <CardTitle>{nameNew}</CardTitle>
+                    <CharDescriptionTable border='1'>
                         <tbody>
                         <tr>
                             <th>Type</th>
                             <td>{itemList}</td>
                         </tr>
-                        <tr>
-                            <th>Attack</th>
-                            <td>Value</td>
-                        </tr>
-                        <tr>
-                            <th>Defence</th>
-                            <td>Value</td>
-                        </tr>
-                        <tr>
-                            <th>HP</th>
-                            <td>Value</td>
-                        </tr>
-                        <tr>
-                            <th>SP Attack</th>
-                            <td>Value</td>
-                        </tr>
-                        <tr>
-                            <th>SP Defence</th>
-                            <td>Value</td>
-                        </tr>
-                        <tr>
-                            <th>Speed</th>
-                            <td>Value</td>
-                        </tr>
+                        {statsList}
                         <tr>
                             <th>Weight</th>
                             <td>{weight}</td>
@@ -217,7 +216,7 @@ export default class CharCardDescription extends Component {
                         </tr>
 
                         </tbody>                        
-                    </table>
+                    </CharDescriptionTable>
                 </CharDescription>   
             </CharDescriptionWrapper>
         )

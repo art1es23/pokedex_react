@@ -35,8 +35,8 @@ const LoadMoreBtn = styled.button`
 
     &:hover {
         cursor: pointer;
-        color: rgba(255,50,50,1);
-        box-shadow: 0 0 10px 1px rgba(255,50,50,0.75);
+        color: rgba(100,0,0,1);
+        box-shadow: 0 0 10px 1px rgba(100,0,0,0.75);
     }
 `;
 
@@ -52,7 +52,8 @@ export default class CharContainer extends Component {
             error: null,
             isLoaded: false,
             selectedChar: 1,
-            countVisibleItems: 12
+            countVisibleItems: 12,
+            filterType: ''
         }
     }
 
@@ -75,6 +76,15 @@ export default class CharContainer extends Component {
         )
     }
 
+    componentDidUpdate (prevProps) {
+
+        // const {chars} = this.state;
+        if (this.props.chars !== prevProps.chars) {
+            this.filterCards(this.state.filterType);
+            console.log('good');
+        }
+    }
+
     onCharSelected = (id) => {
         // console.log(id);
         this.setState({
@@ -83,7 +93,7 @@ export default class CharContainer extends Component {
     }
 
     onChangeCountVisibleItems = () => {
-        let {countVisibleItems} =this.state;
+        let {countVisibleItems} = this.state;
         countVisibleItems += countVisibleItems;
         
         this.setState({
@@ -91,11 +101,42 @@ export default class CharContainer extends Component {
         })
 
     }
+
+    updateState = () => {
+        let {chars} = this.state;
+        this.setState({chars})
+    }
+
+    filterCards = (type) => {
+        
+        let {chars} = this.state;
+
+        let newArr = [];
+
+        chars.map(item => {
+            this.ServicePokedex.getFilterChar(item.url)
+            .then(
+                (res) => {
+                    const {types} = res;
+                    const filter = types.map(el => el.type.name === type);    
+
+                    const filterData = filter.some(el => el === true);
+                    if (!filterData) return false;
+
+                    newArr.push(item);
+                    return newArr;
+                }
+            )
+        })
+                            
+        this.setState({
+            chars: newArr,
+            filterType: type
+        })        
+    }
     
     render () {
         const {error, isLoaded, chars, selectedChar, countVisibleItems} = this.state;
-
-        // console.log(selectedChar);
 
         const charList = () => {
             if (error) {
@@ -111,6 +152,7 @@ export default class CharContainer extends Component {
                         url={item.url}
                         charId={selectedChar}
                         onCharSelected={this.onCharSelected}
+                        filterCards={this.filterCards}
                         />
                 ));
     
