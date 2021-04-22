@@ -45,6 +45,7 @@ const LoadMoreBtn = styled.button`
     background-color: transparent;
     transition: all 0.3s ease-in-out;
     font-size: 1.75rem;
+    height: 5rem;
 
     &:hover {
         cursor: pointer;
@@ -104,14 +105,6 @@ export default class CharContainer extends Component {
         this.initCards();
     }
 
-    // componentDidUpdate (prevState) {
-    //     if (prevState.chars !== this.state.chars ) {
-    //         // this.initCards();
-    //         // this.filterCards(this.state.filterType);
-    //         this.onChangeCountVisibleItems()
-    //     }
-    // }
-
     onCharSelected = (id) => {
         document.querySelector('.modal').classList.add('modal--open');
         this.setState({
@@ -125,9 +118,10 @@ export default class CharContainer extends Component {
         let {countVisibleItems} = this.state;
         countVisibleItems = countVisibleItems + 12;
         
-        this.setState({
-            countVisibleItems
-        })
+        this.setState(() => ({
+            countVisibleItems,
+            ...this.state.chars
+        }))
     }
 
     filterCards = (type) => {
@@ -137,25 +131,20 @@ export default class CharContainer extends Component {
 
         chars.map(item => {
             this.ServicePokedex.getFilterChar(item.url)
-            .then(
-                (res) => {
-                    const {types} = res;
-                    const filter = types.map(el => el.type.name === type);    
+            .then(res => {
+                const {types} = res;
+                const filter = types.map(el => el.type.name === type);    
 
-                    const filterData = filter.some(el => el === true);
-                    if (!filterData) return false;
+                const filterData = filter.some(el => el === true);
+                if (!filterData) return false;
 
-                    newArr.push(item);
-                }
-            )
-            return newArr;
-        })   
-        
-        this.onChangeCountVisibleItems();
-        this.setState({
-            chars: newArr,
-            filterType: type
-        })     
+                newArr.push(item);
+                return this.setState(() => ({
+                        chars: newArr,
+                        filterType: type
+                }))                
+            })
+        })
     }
     
     render () {
