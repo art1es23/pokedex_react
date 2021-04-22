@@ -39,8 +39,13 @@ const CharDescription = styled.div`
     width: 25%;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 15px 5px rgba(0,0,0,0.35);
+    box-shadow: inset 0 0 15px 5px rgba(0,0,0,0.35);
     padding: 2.5rem 5rem;
+    transition: box-shadow 0.3s ease-in-out;
+    &:hover {
+        box-shadow: inset 0 0 10px 1px rgba(100,0,0,0.75);
+    }
+
 `;
 
 const CharDescriptionTable = styled.table`

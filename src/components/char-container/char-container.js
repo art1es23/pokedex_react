@@ -58,7 +58,6 @@ export default class CharContainer extends Component {
     }
 
     componentDidMount () {
-
         this.ServicePokedex.getResources()
         .then(
             (item) => {
@@ -76,14 +75,11 @@ export default class CharContainer extends Component {
         )
     }
 
-    componentDidUpdate (prevProps) {
-
-        // const {chars} = this.state;
-        if (this.props.chars !== prevProps.chars) {
-            this.filterCards(this.state.filterType);
-            console.log('good');
-        }
-    }
+    // componentDidUpdate (prevProps) {
+    //     if (this.state.chars !== prevProps.chars) {
+    //         this.updateState()
+    //     }
+    // }
 
     onCharSelected = (id) => {
         // console.log(id);
@@ -99,12 +95,6 @@ export default class CharContainer extends Component {
         this.setState({
             countVisibleItems
         })
-
-    }
-
-    updateState = () => {
-        let {chars} = this.state;
-        this.setState({chars})
     }
 
     filterCards = (type) => {
